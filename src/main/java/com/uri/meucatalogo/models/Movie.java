@@ -1,4 +1,4 @@
-package com.uri.meu_catalogo.models;
+package com.uri.meucatalogo.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

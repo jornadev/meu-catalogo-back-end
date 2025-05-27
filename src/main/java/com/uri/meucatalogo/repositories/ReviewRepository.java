@@ -1,6 +1,6 @@
-package com.uri.meu_catalogo.repositories;
+package com.uri.meucatalogo.repositories;
 
-import com.uri.meu_catalogo.models.Review;
+import com.uri.meucatalogo.models.Review;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

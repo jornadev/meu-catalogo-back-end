@@ -1,4 +1,4 @@
-package com.uri.meu_catalogo;
+package com.uri.meucatalogo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

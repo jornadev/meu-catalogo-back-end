@@ -1,6 +1,6 @@
-package com.uri.meu_catalogo.repositories;
+package com.uri.meucatalogo.repositories;
 
-import com.uri.meu_catalogo.models.Movie;
+import com.uri.meucatalogo.models.Movie;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface MovieRepository extends MongoRepository<Movie, String> {
