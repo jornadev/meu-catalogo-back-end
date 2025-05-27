@@ -7,14 +7,12 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.UUID;
-
 @Document(collection = "movies")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class Movie {
     @Id
-    private UUID id;
+    private String id;
     private String title;
     private String description;
     private String imageUrl;
