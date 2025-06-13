@@ -3,6 +3,10 @@ package com.uri.meucatalogo.controller;
 import com.uri.meucatalogo.models.User;
 import com.uri.meucatalogo.security.JwtUtil;
 import com.uri.meucatalogo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Autenticação", description = "Endpoints para registro e login de usuários")
 public class UserController {
 
     private final UserService userService;
@@ -28,6 +33,11 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Registrar novo usuário", description = "Cria um novo usuário no sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos ou usuário já existe")
+    })
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User createdUser = userService.registerUser(user);
@@ -39,6 +49,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login do usuário", description = "Realiza autenticação e retorna token JWT")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    })
     public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
             authenticationManager.authenticate(
@@ -59,5 +74,4 @@ public class UserController {
             return new ResponseEntity<>("invalid credentials", HttpStatus.UNAUTHORIZED);
         }
     }
-
 }
