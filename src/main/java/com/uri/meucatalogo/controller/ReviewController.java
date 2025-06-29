@@ -2,11 +2,14 @@ package com.uri.meucatalogo.controller;
 
 import com.uri.meucatalogo.models.Review;
 import com.uri.meucatalogo.service.ReviewService;
+import com.uri.meucatalogo.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -16,9 +19,11 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final MovieService movieService;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, MovieService movieService) {
         this.reviewService = reviewService;
+        this.movieService = movieService;
     }
 
     @PostMapping
@@ -39,5 +44,23 @@ public class ReviewController {
     })
     public List<Review> getReviewsByMovie(@PathVariable String movieId) {
         return reviewService.getReviewsByMovieId(movieId);
+    }
+
+    @PostMapping("/movies/{id}/reviews")
+    @Operation(summary = "Adicionar avaliação a um filme", description = "Adiciona uma nova avaliação para um filme específico")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Avaliação adicionada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Filme não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
+    public ResponseEntity<Review> addReviewToMovie(@PathVariable String id, @RequestBody Review review) {
+        System.out.println("ID recebido: " + id);
+        System.out.println("Filme encontrado? " + movieService.getMovieById(id).isPresent());
+        if (!movieService.getMovieById(id).isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        review.setMovieId(id);
+        Review saved = reviewService.saveReview(review);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 }

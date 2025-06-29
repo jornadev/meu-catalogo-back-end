@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/movies/**").hasRole("ADMIN")
                 .requestMatchers("/generos").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/movies").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/movies/*/reviews").authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
