@@ -32,4 +32,20 @@ public class MovieService {
     public void deleteMovieById(String id) {
         movieRepository.deleteById(id);
     }
+
+    public Movie updateMovie(String id, Movie movie) {
+        Optional<Movie> existing = movieRepository.findById(id);
+        if (existing.isPresent()) {
+            Movie m = existing.get();
+            m.setTitle(movie.getTitle());
+            m.setDescription(movie.getDescription());
+            m.setImageUrl(movie.getImageUrl());
+            m.setYear(movie.getYear());
+            m.setAverageRating(movie.getAverageRating());
+            m.setGender(movie.getGender());
+            return movieRepository.save(m);
+        } else {
+            throw new RuntimeException("Filme não encontrado");
+        }
+    }
 }

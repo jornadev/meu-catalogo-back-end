@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Adicionar um novo filme", description = "Cria um novo filme no catálogo")
@@ -54,6 +56,7 @@ public class MovieController {
         return movieService.getMovieById(id).orElse(null);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Deletar filme por ID", description = "Remove um filme pelo seu ID")
@@ -63,5 +66,17 @@ public class MovieController {
     })
     public void deleteMovieById(@PathVariable String id) {
         movieService.deleteMovieById(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Editar filme por ID", description = "Edita um filme pelo seu ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Filme editado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Filme não encontrado")
+    })
+    public Movie updateMovie(@PathVariable String id, @RequestBody Movie movie) {
+        return movieService.updateMovie(id, movie);
     }
 }
