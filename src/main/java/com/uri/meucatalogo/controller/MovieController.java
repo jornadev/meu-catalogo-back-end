@@ -37,12 +37,11 @@ public class MovieController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Listar todos os filmes", description = "Retorna todos os filmes cadastrados")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de filmes retornada")
-    })
-    public List<Movie> getAllMovies() {
-        return movieService.getAllMovies();
+    @Operation(summary = "Listar todos os filmes", description = "Retorna todos os filmes cadastrados ou filtrados por título e/ou gênero")
+    public List<Movie> getAllMovies(@RequestParam(required = false) String title,
+                                    @RequestParam(required = false) String gender,
+                                    @RequestParam(required = false, defaultValue = "false") boolean matchAll) {
+        return movieService.searchMovies(title, gender, matchAll);
     }
 
     @GetMapping("/{id}")

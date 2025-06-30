@@ -3,6 +3,8 @@ package com.uri.meucatalogo.controller;
 import com.uri.meucatalogo.models.User;
 import com.uri.meucatalogo.security.JwtUtil;
 import com.uri.meucatalogo.service.UserService;
+import com.uri.meucatalogo.service.ReviewService;
+import com.uri.meucatalogo.models.Review;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,10 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,11 +29,13 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final ReviewService reviewService;
 
-    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtUtil jwtUtil, ReviewService reviewService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.reviewService = reviewService;
     }
 
     @PostMapping("/register")
@@ -74,4 +80,13 @@ public class UserController {
             return new ResponseEntity<>("invalid credentials", HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @GetMapping("/{username}/avaliacoes")
+@PreAuthorize("#username.equalsIgnoreCase(authentication.name)")
+public List<Review> getReviewsByUser(@PathVariable String username) {
+    return reviewService.getReviewsByUsername(username);
+}
+
+
+
 }
